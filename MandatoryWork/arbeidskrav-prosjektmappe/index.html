@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdventureLand - Final Boss Battle</title>
+    <!-- Du trenger ikke gjøre noe med CSS-koden! -->
+    <link rel="stylesheet" href="css-skal-ikke-roeres/index.css">
+</head>
+<body>
+
+    <div id="container">     
+
+        <!--
+            Life bars 
+            - For å endre på life bar må dere få tak i div etter id, for eksempel "nameless-knight-hp-div".                       
+        -->
+        <div class="life-bar-container knight-container">     
+            <img src="images/knight-head.png">
+            <div class="life-bar" id="nameless-knight-hp-div"></div><!-- hp (Health Points) til ridderen -->
+        </div>
+
+        <div class="life-bar-container julia-container">
+            <img src="images/julia-head.png">
+            <div class="life-bar" id="julia-the-archer-hp-div"></div><!-- hp (Health Points) til Julia -->
+        </div>
+
+        <div class="life-bar-container cat-container">
+            <img src="images/cat-head.png" alt="">
+            <div class="life-bar" id="the-cat-hp-div"></div><!-- hp (Health Points) til katten -->
+        </div>
+
+        <div class="life-bar-container big-boss-container">
+            <img src="images/big-boss-head.png" alt="">
+            <div class="life-bar" id="big-boss-hp-div"></div><!-- hp (Health Points) til Big boss -->
+        </div>
+
+
+        <!-- The knight -->
+        <img id="nameless-knight" src="images/knight.png" alt="">
+       
+        <!-- Julia the archer -->
+        <img id="julia-the-archer" src="images/julia-the-archer.png">
+
+        <!-- The Cat -->
+        <img id="the-cat" src="images/cat.png" alt="">
+
+        <!-- William the healer -->
+        <img id="william-the-healer" src="images/healer.png">
+
+        <!-- Jack the lumberjack -->
+        <img id="jack-the-lumberjack" src="images/lumberjack.png" alt="">
+
+        <!-- The big evil boss -->
+        <img id="big-boss" src="images/big-boss.png" alt="">
+
+        <!-- Noen ganger dukker et monster opp her -->
+        <img id="appearing-monster" src="" alt=" ">
+
+
+    </div><!-- end container-->
+
+
+    <!-- Her skrives det ut informasjon om hva brukeren gjør og hva som skjer. -->
+    <div id="output-div">
+        <p></p>
+    </div>
+
+
+    <script>
+
+     //Her hentes karakterene fra HTML, slik at de kan brukes i javascript//
+    
+     const namelessKnight = document.getElementById("nameless-knight");
+     const juliaTheArcher = document.getElementById("julia-the-archer");
+     const theCat = document.getElementById("the-cat");
+     const williamTheHealer = document.getElementById("william-the-healer");
+     const jackTheLumberjack = document.getElementById("jack-the-lumberjack");
+     const bigBoss = document.getElementById("big-boss");
+     let appearingMonster = document.getElementById("appearing-monster");
+
+
+     //Her hentes healthbarene til karakterene fra HTML//
+
+     let namelessKnightHp = document.getElementById("nameless-knight-hp-div");
+     let juliaTheArcherHp = document.getElementById("julia-the-archer-hp-div");
+     let theCatHp = document.getElementById("the-cat-hp-div");
+     let bigBossHp = document.getElementById("big-boss-hp-div");
+
+
+     //Her hentes p diven ut//
+
+     let outputDiv = document.getElementById("output-div");
+      
+
+     //Her sier jeg at når disse elementene blir trykket på skal funksjonene kjøre//
+
+     namelessKnight.onclick = attackClick;
+     juliaTheArcher.onclick = batAttack;
+     theCat.onclick = slimeAttack;
+
+     //Her har jeg lagd en variabel som enten er true eller false, når den er true skal funksjonen bigBossAttack kjøre.//
+
+     let bigBossAttacksBack = false;
+
+     //her lager jeg en funksjon som kjører 25% av gangene//
+
+     function shouldAppearMonster() {
+         return Math.random() <= 0.25;
+        }
+
+     /*Her har jeg laget en variabel (isMonsterVisible) som er false helt til det dukker opp et monster,
+     koden under variabelen velger et random monster som skal dukke opp og da blir variabelen true.
+     Den første variabelen (monsterHealth) definerer healthbaren til monsteret som kan dukke opp skal være*/
+
+     let monsterHealth = 0;
+     let isMonsterVisible = false;
+
+     function monsterAppear() {
+         const monsters = ['slime.png', 'bat.png']
+         const randomMonster = monsters[Math.floor(Math.random()*monsters.length)];
+         appearingMonster.src = `images/${randomMonster}`;
+         isMonsterVisible = true;
+         monsterHealth = 20;
+        }
+
+    
+     /*Funksjonen attackClick gjør at bigBoss mister liv*/
+
+     function attackClick() {
+          let damage = Math.floor(Math.random()*10);
+
+         //Denne if statementen sier at om variabelen isMonsterVisible er true så skal man ikke kunne angripe big boss//
+
+          if (isMonsterVisible === true) {
+             return;
+            }
+
+          //Big evil boss blir attacked//
+
+         let health = parseFloat(getComputedStyle(bigBossHp).width); //health variabelen er widthen på bigbosshp i desimaltall hentet ut fra CSS via getComputedStyle.//
+         let currentBossHealth = health - damage; //Her lagde jeg en variabel som er den samme som health bare minus damage som er random, dette gjør at bigbosshp som er definert i desimaltall endres til minus random tall ved klikk.//
+        
+         bigBossHp.style.width = currentBossHealth + "px"; //Her sier jeg at bigbossHp sin bredde skal være den samme som currentHealth + px, dette gjør at bredden endres med minus random tall i form av pixler//
+         outputDiv.innerHTML = `Big evil boss was attacked! Big boss lost ${damage} hp.`; //Dette endrer p taggen i diven outputdiv//
+
+         if (currentBossHealth <= 0) { //Med denne if statementen sier jeg at dersom den healthbaren er mindre eller lik 0 skal den være 0//
+             currentBossHealth = 0;
+             bigBossHp.style.width = 0 + "px";
+             outputDiv.innerHTML = "The big evil boss was killed! You won!";
+             bigBossAttacksBack = false; //Dersom big boss er død skal han ikke kunne angripe tilbake//
+            }
+
+         //Jeg setter denne variabelen til true slik at funksjonen BigBossAttack kjører etter at big boss har blitt angrepet.//
+        
+         bigBossAttacksBack = true;
+
+         //Her sier jeg at bigbossattack skal kjøre om variabelen er true//
+
+         if (bigBossAttacksBack === true) {
+             bigbossAttack();
+            }
+         
+        //shouldAppearMonster er funksjonen som bestemmer når monster skal dukke opp og monsterAppear er funksjonen som gjør at den dukker opp//
+        
+        if (shouldAppearMonster()) { 
+             setTimeout( function() {
+                 monsterAppear(); 
+                 outputDiv.innerHTML = "A monster has appeared! You cannot attack big boss before you kill it!"
+                },2000);
+            }
+        }
+
+    //Funksjon for at slime skal bli angrepet og til slutt forsvinne. Noe av koden er kopiert fra en kode jeg skrev tidligere i arbeidskravet som jeg etterhvert fjernet for å lage denne og den med bat//
+
+     function slimeAttack() {
+         let slimeDamage = Math.floor(Math.random()*10);
+
+         if (isMonsterVisible && appearingMonster.src.includes ("slime.png")) {
+             monsterHealth -= slimeDamage;
+             outputDiv.innerHTML = "The Cat scratched the slime!"
+
+             if (monsterHealth <= 0) { 
+                 appearingMonster.src = "";
+                 outputDiv.innerHTML = "The slime was killed! You can now attack Big Boss."
+                 isMonsterVisible = false;
+                 monsterHealth = 0;
+                }
+            }
+
+        //Her sier jeg at big boss skal angripe tilbake.//
+        
+         bigBossAttacksBack = true;
+
+         if (bigBossAttacksBack === true) {
+             bigbossAttack();
+            }
+        }
+
+    //Funskjon for at bat skal bli angrepet og til slutt forsvinne. noe av koden er kopiert fra en kode jeg skrev tidligere i arbeidskravet, samme som over.//
+
+     function batAttack() {
+         let batDamage = Math.floor(Math.random()*10);
+        
+         if (isMonsterVisible && appearingMonster.src.includes  ("bat.png")) {
+             monsterHealth -= batDamage;
+             outputDiv.innerHTML = "Julia shot the bat with an arrow!";
+
+             if (monsterHealth <= 0) { 
+                 appearingMonster.src = "";
+                 outputDiv.innerHTML = "The bat was killed! You can now attack Big Boss."
+                 isMonsterVisible = false;
+                 monsterHealth = 0;
+                }
+            }
+
+        //Her sier jeg at big boss skal angripe tilbake//
+
+         bigBossAttacksBack = true;
+
+         if (bigBossAttacksBack === true){
+             bigbossAttack();
+            }
+        }
+
+     function bigbossAttack() {
+         console.log("bigbossattack is running");
+         let charactersToAttack = [theCatHp, juliaTheArcherHp, namelessKnightHp]; //her lager jeg en liste med alle karakterenes healthbar//
+         let characterNames = ["The Cat", "Julia The Archer", "Nameless Knight"]; //her har jeg lagd en liste med navnene til karakterene//
+     
+         let randomCharacter = Math.floor(Math.random()*charactersToAttack.length); //Denne koden velger et tilfeldig tall fra listen charactersToAttack//
+         let characterToAttack = charactersToAttack[randomCharacter]; //Her har jeg lagd en variabel som for den tilfeldige karakteren som skal angripes, denne henter ut karakteren ut irfa det valgte tallet//
+         let characterName = characterNames[randomCharacter];
+
+         let randomHealth = parseFloat(getComputedStyle(characterToAttack).width); //Her henter jeg frem bredden på diven til healthbaren til den tilfeldige karakteren//
+         let characterDamage = Math.floor(Math.random()*10); //kode for tilfeldig mengde hp som skal tas ved damage//
+         let currentRandomHealth = randomHealth - characterDamage; //Her defineres hvor mye skade som skal tas fra healthbaren til random karakter//
+     
+         if (currentRandomHealth <= 0) { //Her sier jeg at om healthbaren er lik eller mindre enn 0, skal den være 0//
+             currentRandomHealth = 0
+            }
+        
+         setTimeout(function() {
+             characterToAttack.style.width = currentRandomHealth + "px"; //Her kombinerer jeg den tilfeldige karakteren med angripskoden//
+             outputDiv.innerHTML = `Big evil boss attacked ${characterName} back! ${characterName} lost ${characterDamage} hp.` //Endrer p-tagger i output-div//
+             bigBossAttacksBack = false;
+            }, 1500);  
+        }
+
+    </script>
+</body>
+</html>
