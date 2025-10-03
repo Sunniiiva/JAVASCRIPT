@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kappløpet</title>
+    <!-- CSS skal ikke røres -->
+    <link rel="stylesheet" href="css-skal-ikke-roeres/kapploepet.css">
+</head>
+<body>
+
+    <div id="container"><!-- DET ER IKKE LOV Å ENDRE PÅ NOE I HTML-KODEN! -->
+
+        <h1 id="main-heading">Kappløpet</h1>
+        <h2 id="winner-status">Løpet er i gang</h2>
+
+        <input id="move-miaows-left-leg-btn" type="button" value="Beveg Miaows venstre ben">
+        <input id="move-miaows-right-leg-btn" type="button" value="Beveg Miaows høyre ben">
+
+        <div id="pond"></div>
+        <div id="finish-line"></div>
+        <img id="building" src="images/building-2.png">
+
+        <img id="eskilpadde" src="images/eskilpadde.png">
+
+        <img id="miaow-miaow" src="images/miaow-miaow-runner.png">
+        
+        <img id="geir-geit" src="images/geirgeit.png">          
+
+    </div><!-- DET ER IKKE LOV Å ENDRE PÅ NOE I HTML-KODEN! -->
+    
+
+    <script> 
+
+       //Her henter jeg ut de fleste elementene jeg skal bruke//
+
+       let winnerStatus = document.getElementById("winner-status");
+
+       let eskilpadde = document.getElementById("eskilpadde");
+       let miaowMiaow = document.getElementById("miaow-miaow");
+       let geirGeit = document.getElementById("geir-geit");
+
+       const miaowsLeftLegBtn = document.getElementById("move-miaows-left-leg-btn");
+       const miaowsRightLegBtn = document.getElementById("move-miaows-right-leg-btn");
+
+       //Her sier jeg at når de to knappene trykkes skal funksjonene deres kjøre//
+
+       miaowsLeftLegBtn.onclick = moveLeftLeg;
+       miaowsRightLegBtn.onclick = moveRightLeg;
+
+
+       //Her har jeg lagd 2 boolean variabler for kattens ben//
+
+       let leftLeg = true;
+       let rightLeg = false;
+
+       //Her lager jeg en variabel som skal etterligne posisjonen til elementene//
+
+       let eskilpaddePosition = 0;
+       let miaowPosition = 0;
+       let geirGeitPosition = 0;
+
+       //Denne funksjonen kjører 25% av gangene//
+
+       function geirGeitJumpsBack() {
+        return Math.random() <= 0.25;
+       }
+
+       //Her lager jeg en variabel som har en funksjon som gjør at skilpadden flytter seg litt til venstre hvert sekund//
+
+       let eskilPaddeMove = setInterval(function() {
+        eskilpaddePosition += 3;
+        eskilpadde.style.left = eskilpaddePosition + "px";
+        if (eskilpaddePosition >= 790) {
+            winnerStatus.innerHTML = "Eskilpadde vant!" //Hvis eskilpadde kommer først i mål skrives det ut//
+        }
+        },1000);
+
+        //Her lager jeg en variabel som har en funksjon som gjør at gjeiten flytter seg til venstre hvert halve sekund//
+    
+       let geirGeitMove = setInterval(function() {
+        geirGeitPosition += 12;
+        geirGeit.style.left = geirGeitPosition + "px";
+        if (geirGeitJumpsBack()) { //Her sier jeg at om funksjonen som kjører 25% av gangene, kjører skal geir tilbake 12-22px som er 10px tilbake//
+            geirGeitPosition -= 22;
+        }
+        if (geirGeitPosition >= 790) {
+         winnerStatus.innerHTML = "Geir Geit vant!";//Hvis geir kommer først i mål skrives det ut//
+        }
+       },500);
+
+       //Her er funksjon for å trykke på venstre ben knappen//
+
+       function moveLeftLeg() {
+        if (leftLeg === true) { //Hvis boolean variabelen for det venstre benet er sant(som den starter som) skal koden kjøre//
+            miaowPosition += Math.floor(Math.random()*10 + 5);
+            miaowMiaow.style.left = miaowPosition + "px";
+            leftLeg = false; //Her setter jeg boolean variabelen for venstre ben til false slik at man ikke skal kunne trykke på venstre ben knappen 2 ganger på rad//
+            rightLeg = true; //Her setter jeg boolean variabelen for høyre ben sant slik at man kan trykke på høyre ben knappen//
+        }
+
+        if (miaowPosition >= 790) {
+            winnerStatus.innerHTML = "Miaow Miaow vant!"; //Hvis Miaow kommer først i mål skrives det ut//
+        }
+       }
+
+       //Funskjon for å trykke på høyre ben knappen//
+
+       function moveRightLeg() {
+        if (rightLeg === true) { //Koden kan kun kjøres dersom boolean variabelen for det høyre ben er sant som den blir i moveleftleg//
+            miaowPosition += Math.floor(Math.random()*10 + 5);
+            miaowMiaow.style.left = miaowPosition + "px";
+            leftLeg = true; //Setter den til false igjen slik at man ikke kan trykke på samme ben 2 ganger//
+            rightLeg = false; //Nå kan moveLeftLeg kjøre igjen dersom man trykker på left leg knappen//
+        }
+
+        if (miaowPosition >= 790) {
+            winnerStatus.innerHTML = "Miaow Miaow vant!"; //Hvis Miaow kommer først i mål skrives det ut at katten vant//
+        }
+       }
+    </script>  
+</body>
+</html>

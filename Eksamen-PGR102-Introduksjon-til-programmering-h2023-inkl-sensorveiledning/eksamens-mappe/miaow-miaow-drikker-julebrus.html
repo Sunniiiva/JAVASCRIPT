@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miaow Miaow drikker julebrus</title>
+    <!-- CSS skal ikke røres -->
+    <link rel="stylesheet" href="css-skal-ikke-roeres/miaow-miaow-drikker-julebrus.css">
+</head>
+<body>
+
+    <div id="container"><!-- DET ER IKKE LOV Å ENDRE PÅ NOE I HTML-KODEN! -->
+
+        <h1 id="main-heading">Miaow Miaow drikker julebrus</h1>
+
+        <img id="background-image" src="images/at-the-table.png">
+
+        <img id="cat-left" src="images/cat-left.png">
+
+        <img id="cat-right" src="images/cat-right.png">
+
+        <img id="waiter" src="images/waiter.png">
+
+        <div id="glass-1">
+            <div id="glass-1-content"></div><!-- Innholdet i glasset på venstre side -->
+        </div>
+
+        <div id="glass-2">
+            <div id="glass-2-content"></div><!-- Innholdet i glasset på høyre side -->
+        </div>
+
+    </div>
+
+    <div id="output-div">
+        <p>Her skrives det ut hva som skjer underveis</p>
+    </div><!-- DET ER IKKE LOV Å ENDRE PÅ NOE I HTML-KODEN! -->
+
+    
+    <script>
+
+        //Her henter jeg ut alle elementene jeg skal bruke fra html dokumentet//
+
+        const catLeft = document.getElementById("cat-left");
+        const catRight = document.getElementById("cat-right");
+        const waiter = document.getElementById("waiter");
+
+        let glass1 = document.getElementById("glass-1-content");
+        let glass2 = document.getElementById("glass-2-content");
+        let outputDiv = document.getElementById("output-div");
+
+        //Her har jeg lagd en array for begge glassene så jeg slipper å skrive masse 2 ganger//
+         
+        glassArray = [glass1, glass2];
+
+        //Her sier jeg at funksjoner skal kjøre når de elementene blir trykket på//
+
+        waiter.onclick = pourJulebrus;
+       catLeft.onclick = leftCatDrink;
+        catRight.onclick = rightCatDrink;
+
+
+        //Denne funksjonen gjør at kelneren heller oppi mer julebrus i glassene til kattene//
+
+        function pourJulebrus() {
+            let brusAmount = 40;
+
+            //Her har jeg lagd en for løkke som sier at begge glassene skal fylles med 40px julebrus samtidig og at melding 0//
+            
+            for ( let i = 0; i < glassArray.length; i++) {
+                let currentBrusLevel = parseFloat(getComputedStyle(glassArray[i]).height);
+                const pourBrus = currentBrusLevel + brusAmount;
+                glassArray[i].style.height = pourBrus + "px";
+                outputDiv.innerHTML = meldingsArray[0];
+                
+                //Her sier jeg at hvis julebrusen er over 80px skal den ikke gå over det og melding 3 skrives ut fra arrayet//
+
+                if (pourBrus >= 80) {
+                    glassArray[i].style.height = 80 + "px";
+                    outputDiv.innerHTML = meldingsArray[3];
+                }
+            }
+        }
+
+        //Denne funksjonen sier at når katten til venstre blir trykket på skal innholdet i glass 1 gå ned i px og melding 1 skrives ut//
+
+        function leftCatDrink() {
+            brusAmount = 20;
+            let brusLevel = parseFloat(getComputedStyle(glass1).height);
+            let drinkBrus = brusLevel - brusAmount;
+            glass1.style.height = drinkBrus + "px";  
+            outputDiv.innerHTML = meldingsArray[1];
+         
+            //Her sier jeg at dersom innholdet i glasset er 0px eller mindre skal den være 0//
+
+            if (drinkBrus < 0) {
+                glass1.style.height = 0 + "px";
+                outputDiv.innerHTML = meldingsArray[4];
+            }
+        }
+
+        //Denne funksjonen sier at når katten til høyre blir trykket på skal innholdet i glass 2 gå ned i px og melding 2 skrives ut//
+
+        function rightCatDrink() {
+            brusAmount = 20;
+            let brusLevel = parseFloat(getComputedStyle(glass2).height);
+            let drinkBrus = brusLevel - brusAmount;
+            glass2.style.height = drinkBrus + "px";
+            outputDiv.innerHTML = meldingsArray[2];
+
+            //Her sier jeg at dersom innholdet i glasset er 0 eller mindre skal det være 0//
+
+            if (drinkBrus < 0) {
+                glass1.style.height = 0 + "px";
+                outputDiv.innerHTML = meldingsArray[5];
+            }
+        }
+
+        //Her er arrayet med meldinger som skal skrives ut underveis//
+
+        const meldingsArray = [
+            "Kelneren har helt julebrus oppi glassene!",
+            "Miow Miow drikker julebrus fra glasset sitt!",
+            "Lucky Cat drikker julebrus fra glasset sitt!",
+            "Glassene er fulle! Forsyn dere kittens<3",
+            "Glasset til Miow Miow er tomt! Meow på kelneren om mer julebrus",
+            "Glasset til Lucky Cat er tomt! Meow på kelneren for mer brus"
+        ];
+    </script>
+    
+</body>
+</html>
